@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 RPA Financial Transaction Processor - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(149, 165, 166, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status.running {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.stopped {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .terminal-container {
+            padding: 30px;
+            background: #1e1e1e;
+            min-height: 500px;
+        }
+
+        .terminal-header {
+            background: #2d2d2d;
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terminal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27ca3f; }
+
+        .terminal {
+            background: #000;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 0 0 10px 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .terminal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terminal::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .terminal::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        .terminal::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .btn {
+                margin: 5px;
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            
+            .terminal {
+                height: 300px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 RPA Financial Transaction Processor</h1>
+            <p>Panel de Control - Automatización de Procesos Financieros</p>
+        </div>
+
+        <div class="controls">
+            <button id="startBtn" class="btn btn-primary">
+                🚀 Iniciar RPA
+            </button>
+            <button id="stopBtn" class="btn btn-danger" disabled>
+                ⏹️ Detener RPA
+            </button>
+            <button id="clearBtn" class="btn btn-secondary">
+                🗑️ Limpiar Terminal
+            </button>
+            
+            <div id="status" class="status stopped">
+                ⏸️ RPA Detenido
+            </div>
+        </div>
+
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <div class="terminal-title">
+                    <span>💻 Terminal RPA</span>
+                </div>
+                <div class="terminal-dots">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                </div>
+            </div>
+            <div id="terminal" class="terminal">
+                Bienvenido al Panel de Control RPA
+                ======================================
+                
+                Este panel te permite ejecutar el RPA de Procesamiento 
+                de Transacciones Financieras directamente desde el navegador.
+                
+                Haz clic en "🚀 Iniciar RPA" para comenzar la automatización.
+                
+                La salida se mostrará aquí en tiempo real...
+                
+                ======================================
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>© 2025 RPA Financial Transaction Processor - Desarrollado por Luis V con ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        let eventSource;
+        let isRunning = false;
+
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const status = document.getElementById('status');
+        const terminal = document.getElementById('terminal');
+
+        // Función para agregar texto a la terminal
+        function appendToTerminal(text) {
+            terminal.textContent += text;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Función para limpiar la terminal
+        function clearTerminal() {
+            terminal.textContent = '';
+        }
+
+        // Función para actualizar el estado
+        function updateStatus(running) {
+            isRunning = running;
+            if (running) {
+                status.textContent = '🔄 RPA Ejecutándose...';
+                status.className = 'status running';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+            } else {
+                status.textContent = '⏸️ RPA Detenido';
+                status.className = 'status stopped';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        // Función para iniciar el stream de eventos
+        function startEventStream() {
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            eventSource = new EventSource('/stream');
+            
+            eventSource.onmessage = function(event) {
+                if (event.data.trim()) {
+                    appendToTerminal(event.data);
+                }
+            };
+
+            eventSource.onerror = function(event) {
+                console.error('Error en el stream de eventos:', event);
+                eventSource.close();
+            };
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', async function() {
+            try {
+                const response = await fetch('/start_rpa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    updateStatus(true);
+                    clearTerminal();
+                    appendToTerminal('🚀 Iniciando RPA...\n');
+                    startEventStream();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error al iniciar RPA:', error);
+                alert('Error al iniciar el RPA');
+            }
+        });
+
+        stopBtn.addEventListener('click', async function() {
+            try {
+                const response = await fetch('/stop_rpa', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    updateStatus(false);
+                    if (eventSource) {
+                        eventSource.close();
+                    }
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error al detener RPA:', error);
+                alert('Error al detener el RPA');
+            }
+        });
+
+        clearBtn.addEventListener('click', async function() {
+            try {
+                await fetch('/clear_output', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                clearTerminal();
+                appendToTerminal('Terminal limpiada.\n');
+            } catch (error) {
+                console.error('Error al limpiar terminal:', error);
+            }
+        });
+
+        // Verificar estado inicial
+        async function checkInitialStatus() {
+            try {
+                const response = await fetch('/status');
+                const data = await response.json();
+                updateStatus(data.is_running);
+                
+                if (data.is_running) {
+                    startEventStream();
+                }
+            } catch (error) {
+                console.error('Error al verificar estado:', error);
+            }
+        }
+
+        // Inicializar
+        checkInitialStatus();
+    </script>
+</body>
+</html> 

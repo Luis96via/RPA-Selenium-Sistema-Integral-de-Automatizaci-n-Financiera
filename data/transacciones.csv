@@ -1,0 +1,11 @@
+Fecha,Descripción,Tipo,Moneda,Monto
+2025-07-03,Depósito inicial,Ingreso,USD,5000.00
+2025-07-03,Compra de acciones AAPL,Gasto,USD,1200.00
+2025-07-03,Venta de bonos,Ingreso,EUR,800.00
+2025-07-03,Pago de comisión,Gasto,USD,50.00
+2025-07-03,Dividendos recibidos,Ingreso,GBP,200.00
+2025-07-03,Compra de ETF,Gasto,EUR,400.00
+2025-07-03,Interés bancario,Ingreso,USD,15.00
+2025-07-03,Retiro en efectivo,Gasto,USD,300.00
+2025-07-03,Transferencia recibida,Ingreso,USD,1000.00
+2025-07-03,Pago de servicios,Gasto,GBP,100.00

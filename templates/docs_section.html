@@ -1,0 +1,223 @@
+<!-- Documentación -->
+<div class="docs-toggle">
+    <button id="docsToggleBtn" class="btn btn-info">
+        📚 Documentación Técnica
+    </button>
+</div>
+
+<div id="docsContainer" class="docs-container">
+    <div class="docs-content">
+        <!-- Descripción General -->
+        <div class="docs-section">
+            <h2>🎯 Descripción del Proyecto</h2>
+            <p>Este es un sistema integral de automatización robótica (RPA) desarrollado con Python y Selenium que automatiza completamente el proceso de extracción, procesamiento y reporte de datos financieros desde un portal web.</p>
+            
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h4>🤖 RPA con Selenium</h4>
+                    <p>Automatización completa de login y extracción de datos de sitios web financieros</p>
+                </div>
+                <div class="tech-card">
+                    <h4>🔐 Resolución de Captchas</h4>
+                    <p>OCR personalizado para resolver captchas de texto, imagen y lógica</p>
+                </div>
+                <div class="tech-card">
+                    <h4>🌐 APIs Integradas</h4>
+                    <p>Integración con Frankfurter API para tasas de cambio en tiempo real</p>
+                </div>
+                <div class="tech-card">
+                    <h4>💾 Base de Datos MySQL</h4>
+                    <p>Almacenamiento estructurado y consultas SQL optimizadas</p>
+                </div>
+                <div class="tech-card">
+                    <h4>📊 Reportes Automatizados</h4>
+                    <p>Generación de reportes en Excel, XML y JSON con envío automático</p>
+                </div>
+                <div class="tech-card">
+                    <h4>🎨 Interfaz Web Moderna</h4>
+                    <p>Panel de control con terminal en tiempo real y documentación</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flujo de Proceso -->
+        <div class="docs-section">
+            <h2>🔄 Flujo de Proceso Automatizado</h2>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="flow-step-number">1</div>
+                    <div class="flow-step-content">
+                        <h4>🔐 Login Automatizado</h4>
+                        <p>Navegación automática al portal web y proceso de autenticación</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">2</div>
+                    <div class="flow-step-content">
+                        <h4>🧩 Resolución de Captchas</h4>
+                        <p>Resolución automática de captchas usando OCR personalizado (texto, imagen, lógica)</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">3</div>
+                    <div class="flow-step-content">
+                        <h4>📥 Extracción de Datos</h4>
+                        <p>Extracción y almacenamiento de transacciones, retiros y depósitos en diferentes monedas en archivo CSV</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">4</div>
+                    <div class="flow-step-content">
+                        <h4>💱 Consumo de API Frankfurter</h4>
+                        <p>Obtención de tasas de cambio actuales y almacenamiento en archivo JSON</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">5</div>
+                    <div class="flow-step-content">
+                        <h4>💰 Conversión a USD</h4>
+                        <p>Conversión automática de todos los montos de transacciones a USD</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">6</div>
+                    <div class="flow-step-content">
+                        <h4>🗄️ Gestión de Base de Datos</h4>
+                        <p>Ejecución ordenada de SQL: creación de BD si no existe, creación de tablas si no existen</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">7</div>
+                    <div class="flow-step-content">
+                        <h4>💾 Almacenamiento en MySQL</h4>
+                        <p>Almacenamiento estructurado de todos los datos procesados en la base de datos</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">8</div>
+                    <div class="flow-step-content">
+                        <h4>📊 Generación de Reportes</h4>
+                        <p>Consumo de datos para generar reporte ejecutivo: Resumen Financiero profesional con datos reales</p>
+                    </div>
+                </div>
+                
+                <div class="flow-arrow">⬇️</div>
+                
+                <div class="flow-step">
+                    <div class="flow-step-number">9</div>
+                    <div class="flow-step-content">
+                        <h4>📧 Envío Automático</h4>
+                        <p>Envío del reporte a correos destinados con estilo moderno y profesional</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tecnologías Utilizadas -->
+        <div class="docs-section">
+            <h2>🛠️ Stack Tecnológico</h2>
+            
+            <h3>🤖 Automatización y Web Scraping</h3>
+            <ul class="features-list">
+                <li><strong>Python 3.x:</strong> Lenguaje principal del proyecto</li>
+                <li><strong>Selenium WebDriver:</strong> Automatización de navegador web</li>
+                <li><strong>ChromeDriver:</strong> Control del navegador Chrome</li>
+                <li><strong>BeautifulSoup:</strong> Parsing de HTML (complementario)</li>
+            </ul>
+
+            <h3>🔐 Resolución de Captchas</h3>
+            <ul class="features-list">
+                <li><strong>OCR Personalizado:</strong> API REST Serverless desarrollada por el autor</li>
+                <li><strong>Pillow (PIL):</strong> Procesamiento de imágenes</li>
+                <li><strong>OpenCV:</strong> Análisis de imágenes para captchas</li>
+            </ul>
+
+            <h3>🌐 APIs y Servicios Externos</h3>
+            <ul class="features-list">
+                <li><strong>Frankfurter API:</strong> Tasas de cambio en tiempo real</li>
+                <li><strong>Requests:</strong> Cliente HTTP para consumo de APIs</li>
+                <li><strong>JSON:</strong> Procesamiento de respuestas de API</li>
+            </ul>
+
+            <h3>💾 Base de Datos y Almacenamiento</h3>
+            <ul class="features-list">
+                <li><strong>MySQL:</strong> Base de datos relacional principal</li>
+                <li><strong>mysql-connector-python:</strong> Conector oficial de MySQL</li>
+                <li><strong>Pandas:</strong> Manipulación y análisis de datos</li>
+                <li><strong>CSV:</strong> Almacenamiento temporal de datos extraídos</li>
+            </ul>
+
+            <h3>📊 Generación de Reportes</h3>
+            <ul class="features-list">
+                <li><strong>OpenPyXL:</strong> Generación de reportes Excel</li>
+                <li><strong>XML.etree.ElementTree:</strong> Generación de reportes XML</li>
+                <li><strong>JSON:</strong> Generación de reportes JSON</li>
+                <li><strong>Rich:</strong> Formateo de salida en consola (versión standalone)</li>
+            </ul>
+
+            <h3>📧 Envío de Emails</h3>
+            <ul class="features-list">
+                <li><strong>SMTP:</strong> Protocolo de envío de emails</li>
+                <li><strong>EmailMessage:</strong> Construcción de mensajes</li>
+                <li><strong>HTML Templates:</strong> Plantillas modernas para emails</li>
+                <li><strong>python-dotenv:</strong> Gestión de variables de entorno</li>
+            </ul>
+
+            <h3>🌐 Interfaz Web</h3>
+            <ul class="features-list">
+                <li><strong>Flask:</strong> Framework web para la interfaz</li>
+                <li><strong>HTML5/CSS3:</strong> Interfaz moderna y responsiva</li>
+                <li><strong>JavaScript:</strong> Interactividad y polling en tiempo real</li>
+                <li><strong>AJAX:</strong> Comunicación asíncrona con el servidor</li>
+            </ul>
+
+            <h3>🔧 Utilidades y Herramientas</h3>
+            <ul class="features-list">
+                <li><strong>Logging:</strong> Sistema de logs estructurado</li>
+                <li><strong>Threading:</strong> Ejecución en hilos separados</li>
+                <li><strong>Subprocess:</strong> Ejecución de procesos Python</li>
+                <li><strong>Queue:</strong> Comunicación entre hilos</li>
+            </ul>
+        </div>
+
+        <!-- Características Destacadas -->
+        <div class="docs-section">
+            <h2>⭐ Características Destacadas</h2>
+            <ul class="features-list">
+                <li><strong>Automatización Completa:</strong> Proceso end-to-end sin intervención manual</li>
+                <li><strong>Resolución Inteligente de Captchas:</strong> OCR personalizado para múltiples tipos de captcha</li>
+                <li><strong>Integración de APIs:</strong> Consumo automático de tasas de cambio en tiempo real</li>
+                <li><strong>Procesamiento de Datos:</strong> Conversión automática de monedas y normalización</li>
+                <li><strong>Base de Datos Robusta:</strong> Creación automática de BD y tablas si no existen</li>
+                <li><strong>Reportes Profesionales:</strong> Múltiples formatos (Excel, XML, JSON) con diseño moderno</li>
+                <li><strong>Envío Automático de Emails:</strong> Plantillas HTML profesionales con adjuntos</li>
+                <li><strong>Interfaz Web Moderna:</strong> Panel de control con terminal en tiempo real</li>
+                <li><strong>Logging Detallado:</strong> Seguimiento completo del proceso con timestamps</li>
+                <li><strong>Manejo de Errores:</strong> Sistema robusto de recuperación y notificación</li>
+                <li><strong>Escalabilidad:</strong> Arquitectura modular y reutilizable</li>
+                <li><strong>Documentación Completa:</strong> Guías técnicas y flujos de proceso</li>
+            </ul>
+        </div>
+    </div>
+</div> 
