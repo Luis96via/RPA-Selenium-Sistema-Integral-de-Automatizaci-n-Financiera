@@ -63,6 +63,8 @@ rpa-selenium/
 └── README.md              # Esta documentación
 ```
 
+Comando Orquestador para correr el FrotEnd en Flask y el RPA Black: python app_simple.py 
+
 ## 🔄 Flujo Completo del Sistema
 
 ### **1. Inicio de Sesión Automático**
