@@ -211,18 +211,17 @@ def main():
             conn.close()
 
             # Mostrar resumen
-            logger.info("               Resumen Financiero")
-            logger.info("+-----------------------------------------------+")
-            logger.info("| Campo                   | Valor               |")
-            logger.info("|-------------------------+---------------------|")
-            logger.info(f"| Fecha de generación     | {now} |")
-            logger.info(f"| Balance total en USD    | {balance_total:,.2f}           |")
-            logger.info(f"| Total Ingresos en USD   | {total_ingresos:,.2f}           |")
-            logger.info(f"| Total Gastos en USD     | {total_gastos:,.2f}           |")
-            logger.info(f"| Número de transacciones | {num_transacciones}                 |")
-            logger.info(f"| Ingresos                | {num_ingresos}                 |")
-            logger.info(f"| Gastos                  | {num_gastos}                 |")
-            logger.info("+-----------------------------------------------+")
+            logger.info("")
+            logger.info("RESUMEN FINANCIERO")
+            logger.info("=" * 50)
+            logger.info(f"Fecha: {now}")
+            logger.info(f"Balance Total: ${balance_total:,.2f} USD")
+            logger.info(f"Total Ingresos: ${total_ingresos:,.2f} USD")
+            logger.info(f"Total Gastos: ${total_gastos:,.2f} USD")
+            logger.info(f"Transacciones: {num_transacciones}")
+            logger.info(f"Ingresos: {num_ingresos}")
+            logger.info(f"Gastos: {num_gastos}")
+            logger.info("=" * 50)
             
             # Exportar a JSON
             resumen = {
@@ -269,10 +268,18 @@ def main():
                 cell.alignment = Alignment(horizontal='center', vertical='center')
             wb.save('reportes/resumen_financiero.xlsx')
             
-            logger.info("+-----------------------------------------------------------------------------+")
-            logger.info("| [OK] Correo enviado exitosamente a luis96via@gmail.com con el resumen       |")
-            logger.info("| financiero adjunto.                                                         |")
-            logger.info("+-----------------------------------------------------------------------------+")
+            # Enviar email con el resumen
+            try:
+                from process_data import enviar_resumen_por_email
+                enviar_resumen_por_email(resumen)
+                logger.info("+-----------------------------------------------------------------------------+")
+                logger.info("| [OK] Correo enviado exitosamente con el resumen financiero adjunto.       |")
+                logger.info("+-----------------------------------------------------------------------------+")
+            except Exception as e:
+                logger.error(f"Error enviando email: {e}")
+                logger.info("+-----------------------------------------------------------------------------+")
+                logger.info("| [ERROR] No se pudo enviar el correo electrónico.                         |")
+                logger.info("+-----------------------------------------------------------------------------+")
             
             print_success("Procesamiento y generación de reportes completado exitosamente")
             

@@ -5,13 +5,13 @@
 
 echo "🚀 Configurando RPA en PythonAnywhere..."
 
-# 1. Actualizar sistema
+# 1. Actualizar sistema (omitir en PythonAnywhere)
 echo "📦 Actualizando sistema..."
-sudo apt-get update
+# sudo apt-get update  # Comentado para PythonAnywhere
 
-# 2. Instalar Chrome
+# 2. Instalar Chrome (omitir en PythonAnywhere)
 echo "🌐 Instalando Chrome..."
-sudo apt-get install -y chromium-browser
+# sudo apt-get install -y chromium-browser  # Comentado para PythonAnywhere
 
 # 3. Descargar ChromeDriver
 echo "🔧 Descargando ChromeDriver..."
@@ -24,8 +24,8 @@ rm chromedriver_linux64.zip LATEST_RELEASE
 
 # 4. Instalar dependencias Python
 echo "🐍 Instalando dependencias Python..."
-pip3 install --user --upgrade pip
-pip3 install --user -r requirements.txt
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
 
 # 5. Crear directorios necesarios
 echo "📁 Creando directorios..."

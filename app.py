@@ -23,7 +23,7 @@ class RPAExecutor:
             return
         
         self.is_running = True
-        output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] 🚀 Iniciando RPA...\n")
+        output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] Iniciando RPA...\n")
         
         try:
             # Configurar el entorno para capturar toda la salida
@@ -59,17 +59,17 @@ class RPAExecutor:
             return_code = self.process.wait()
             
             if return_code == 0:
-                output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ RPA completado exitosamente!\n")
-                output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] 🎉 Proceso finalizado con éxito. Todos los reportes generados.\n")
+                output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ✓ RPA completado exitosamente!\n")
+                output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ✓ Proceso finalizado con éxito. Todos los reportes generados.\n")
             else:
-                output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ❌ RPA terminó con código de error: {return_code}\n")
+                output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ✗ RPA terminó con código de error: {return_code}\n")
                 
         except Exception as e:
-            output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ❌ Error durante la ejecución: {str(e)}\n")
+            output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ✗ Error durante la ejecución: {str(e)}\n")
         finally:
             self.is_running = False
             self.process = None
-            output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] 🔚 Proceso RPA finalizado.\n")
+            output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] Proceso RPA finalizado.\n")
 
 # Instancia global del ejecutor
 rpa_executor = RPAExecutor()
@@ -100,7 +100,7 @@ def stop_rpa():
     """Detiene el RPA si está ejecutándose"""
     if rpa_executor.is_running and rpa_executor.process:
         rpa_executor.process.terminate()
-        output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] ⏹️ RPA detenido por el usuario\n")
+        output_queue.put(f"[{datetime.now().strftime('%H:%M:%S')}] RPA detenido por el usuario\n")
         rpa_executor.is_running = False
         return jsonify({'status': 'success', 'message': 'RPA detenido'})
     

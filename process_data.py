@@ -340,7 +340,17 @@ def enviar_resumen_por_email(resumen):
     load_dotenv()
     remitente = os.getenv('EMAIL_USER')
     password = os.getenv('EMAIL_PASS')
-    destinatario = os.getenv('EMAIL_TO')
+    
+    # Obtener emails desde la base de datos
+    from email_manager import get_email_list
+    destinatario = get_email_list()
+    
+    if not destinatario:
+        print("⚠️ No hay emails configurados en la base de datos")
+        return
+
+    print(f"Intentando enviar email a: {destinatario}")
+    print(f"Desde: {remitente}")
 
     asunto = "Reporte Ejecutivo: Resumen Financiero"
     # Cuerpo HTML elegante
@@ -383,27 +393,59 @@ def enviar_resumen_por_email(resumen):
     </body>
     </html>
     '''
-    msg = EmailMessage()
-    msg['Subject'] = asunto
-    msg['From'] = remitente
-    msg['To'] = destinatario
-    msg.set_content("Este correo contiene un resumen financiero en formato HTML. Si no lo visualiza correctamente, por favor revise el adjunto.")
-    msg.add_alternative(cuerpo_html, subtype='html')
+    
+    try:
+        msg = EmailMessage()
+        msg['Subject'] = asunto
+        msg['From'] = remitente
+        msg['To'] = destinatario
+        msg.set_content("Este correo contiene un resumen financiero en formato HTML. Si no lo visualiza correctamente, por favor revise el adjunto.")
+        msg.add_alternative(cuerpo_html, subtype='html')
 
-    with open('reportes/resumen_financiero.xlsx', 'rb') as f:
-        file_data = f.read()
-        file_name = 'resumen_financiero.xlsx'
-    msg.add_attachment(
-        file_data,
-        maintype='application',
-        subtype='vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        filename=file_name
-    )
+        # Verificar que existe el archivo antes de adjuntarlo
+        if os.path.exists('reportes/resumen_financiero.xlsx'):
+            with open('reportes/resumen_financiero.xlsx', 'rb') as f:
+                file_data = f.read()
+                file_name = 'resumen_financiero.xlsx'
+            msg.add_attachment(
+                file_data,
+                maintype='application',
+                subtype='vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                filename=file_name
+            )
+            print("Archivo Excel adjuntado correctamente")
+        else:
+            print("Archivo Excel no encontrado, enviando sin adjunto")
 
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-        smtp.login(remitente, password)
-        smtp.send_message(msg)
-    console.print(Panel(f"[OK] Correo enviado exitosamente a {destinatario} con el resumen financiero adjunto.", style=Style(color="white", bgcolor="#28a745"), box=box.ROUNDED))
+        print("Conectando a Gmail...")
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            print("Autenticando...")
+            smtp.login(remitente, password)
+            print("Enviando email...")
+            smtp.send_message(msg)
+            print("Email enviado exitosamente")
+            
+        console.print(Panel(f"[OK] Correo enviado exitosamente a {destinatario} con el resumen financiero adjunto.", style=Style(color="white", bgcolor="#28a745"), box=box.ROUNDED))
+        
+    except smtplib.SMTPAuthenticationError as e:
+        error_msg = f"Error de autenticación: Verifica EMAIL_USER y EMAIL_PASS en .env"
+        print(error_msg)
+        console.print(Panel(error_msg, style=Style(color="white", bgcolor="#dc3545"), box=box.ROUNDED))
+        
+    except smtplib.SMTPRecipientsRefused as e:
+        error_msg = f"Error con destinatarios: {e}"
+        print(error_msg)
+        console.print(Panel(error_msg, style=Style(color="white", bgcolor="#dc3545"), box=box.ROUNDED))
+        
+    except smtplib.SMTPServerDisconnected as e:
+        error_msg = f"Error de conexión con servidor: {e}"
+        print(error_msg)
+        console.print(Panel(error_msg, style=Style(color="white", bgcolor="#dc3545"), box=box.ROUNDED))
+        
+    except Exception as e:
+        error_msg = f"Error inesperado enviando email: {e}"
+        print(error_msg)
+        console.print(Panel(error_msg, style=Style(color="white", bgcolor="#dc3545"), box=box.ROUNDED))
 
 def main():
     create_database_and_tables()

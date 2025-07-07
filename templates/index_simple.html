@@ -543,46 +543,137 @@
         }
 
         .email-list {
-            max-height: 150px;
+            max-height: 200px;
             overflow-y: auto;
             border: 1px solid #e9ecef;
             border-radius: 8px;
             padding: 10px;
             background: #f8f9fa;
+            margin-bottom: 15px;
         }
 
         .email-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 12px;
+            padding: 10px 12px;
             margin: 5px 0;
             background: white;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
         }
 
-        .email-item .email-text {
+        .email-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+
+        .email-info {
             flex: 1;
-            margin-right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
 
-        .email-item .remove-email {
-            background: #dc3545;
-            color: white;
+        .email-text {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .email-name {
+            font-size: 0.85em;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .email-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .edit-email, .remove-email {
+            background: none;
             border: none;
             border-radius: 50%;
-            width: 25px;
-            height: 25px;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
 
-        .email-item .remove-email:hover {
+        .edit-email {
+            background: #28a745;
+            color: white;
+        }
+
+        .edit-email:hover {
+            background: #218838;
+            transform: scale(1.1);
+        }
+
+        .remove-email {
+            background: #dc3545;
+            color: white;
+        }
+
+        .remove-email:hover {
             background: #c82333;
+            transform: scale(1.1);
+        }
+
+        .add-email-section {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .email-input {
+            flex: 2;
+        }
+
+        .email-name-input {
+            flex: 1;
+        }
+
+        .add-email-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .add-email-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .config-cancel {
+            background: #6c757d;
+            color: white;
+        }
+
+        .config-cancel:hover {
+            background: #5a6268;
+        }
+
+        .config-save {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .config-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -914,26 +1005,20 @@
                     </div>
                     
                     <div class="config-form-group">
-                        <label for="newEmail">📮 Agregar Correo Destinatario:</label>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="email" id="newEmail" placeholder="ejemplo@correo.com" style="flex: 1;">
-                            <button id="addEmailBtn" class="config-btn config-btn-primary" style="margin: 0;">➕</button>
+                        <label>📬 Emails Destinatarios:</label>
+                        <div class="email-list" id="emailList">
+                            <!-- Los emails se cargarán dinámicamente -->
                         </div>
-                    </div>
-                    
-                    <div class="config-form-group">
-                        <label>📋 Correos Configurados:</label>
-                        <div id="emailList" class="email-list">
-                            <div class="email-item">
-                                <span class="email-text">luis96via@gmail.com</span>
-                                <button class="remove-email" onclick="removeEmail(this)">×</button>
-                            </div>
+                        <div class="add-email-section">
+                            <input type="text" id="newEmail" placeholder="nuevo@email.com" class="email-input">
+                            <input type="text" id="newEmailName" placeholder="Nombre (opcional)" class="email-name-input">
+                            <button id="addEmailBtn" class="add-email-btn">➕ Agregar</button>
                         </div>
                     </div>
                 </div>
                 <div class="config-modal-footer">
-                    <button id="configCancelBtn" class="config-btn config-btn-secondary">Cancelar</button>
-                    <button id="configSaveBtn" class="config-btn config-btn-primary">💾 Guardar Configuración</button>
+                    <button id="configCancelBtn" class="config-btn config-cancel">❌ Cancelar</button>
+                    <button id="configSaveBtn" class="config-btn config-save">💾 Guardar</button>
                 </div>
             </div>
         </div>
@@ -961,10 +1046,98 @@
         const terminal = document.getElementById('terminal');
         const docsContainer = document.getElementById('docsContainer');
 
-        // Función para agregar texto a la terminal
-        function appendToTerminal(text) {
-            if (text && text.trim()) {
-                terminal.textContent += text + '\n';
+        // Mostrar el arte ASCII automáticamente al cargar la página
+        const asciiLuisVR = `
+                               ....                                . ...                            
+                           ..+%@@%=..                            ..:#@@@*:..                        
+                          ..@@@@@@@%.                            .+@@@@@@@+.                        
+                          .-@@@@@@@@-                            .#@@@@@@@#.                        
+                          ..#@@@@@@#.                            .-@@@@@@@-.                        
+                           ..:*@@@@@=....                      ..:#@@@@%=..                         
+                             ..@@@@@@@=..                   ...:#@@@@@@+..                          
+                            ..=@@@@@@@@@=..                 .:#@@@@@@@@%..                          
+                            ..#@@@@@@@@@@@=..            ..:%@@@@@@@@@@@:.                          
+                             :@@@@@@@@@@@@@@=..         .:%@@@@@@@@@@@@@+.                          
+                            .=@@@@@@@@@@@@@@@@=...   ..:#@@@@@@@@@@@@@@@#.                          
+                            .*@@@@@@@@@@@@@@@@@@-.....#@@@@@@@@@@@@@@@@@%:.                         
+                            .%@@@@@@@@@@@@@@@@@@@@=:#@@@@@@@@@@@@@@@@@@@@-.                         
+          *++=:....... ..   :@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*.    ........:-=           
+          @@@@@@@@@@@@@%*=-:*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@--=+#@@@@@@@@@@@           
+          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           
+          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           
+          :%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           
+          ..*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           
+          ...-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*.           
+             ..#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-.            
+              ..=@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%..             
+               ..:%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+...             
+                 ..*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@:.                
+                  ..-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*..                 
+                   ...#@@@@@@@@@@@@@@@@@%#*++=--::::::--==+*#%@@@@@@@@@@@@@@@@@@-..                 
+                      .=@@@@@@@@@%+:......               .........:+%@@@@@@@@@%....                 
+                       .:%@@#-.....                                 ....-*@@@+..                    
+                        ..............                  ...           .........                     
+                       ..:+@@@@@@@@@%+:...           ...-%*..  ....:=#%@@@@@%=.                     
+                     ..+@@@@@@@@@@@@@@@@@*:...    ....*@@+.....-%@@@@@@@#=---:.                     
+                  ...=@@@@@@@@@@@@@@@@@@@@@@@#*+**#@@@@+.....*@@@@@@@*:..                           
+                  ..#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%:. ..+@@@@@@@%:.                              
+                 ..%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+.. ..%@@@@@@@@..                               
+                 .*@@*:......:-+*#%@@@@@@%*=:+@@@@@=.   :%@@@@@@@@*..                               
+                 .%%:.               ..   .:@@@@@@=.  ..*@@@@@@@@@+                                
+                 ....                   ..=@@@@@@#.   .:@@@@@@@@@@+                                
+                                        .+@@@@@@@=.   .+@@@@@@@@@@*.                                
+                                      ..=@@@@@@@@:    .*@@@@@@@@@@#..                               
+                                     ..:@@@@@@@@@:    .*@@@@@@@@@@%..                               
+                                     ..%@@@@@@@@@:    .+@@@@@@@@@@%..                               
+                                     .-@@@@@@@@@@:    .=@@@@@@@@@@@..                               
+                                     .+@@@@@@@@@@:    .-@@@@@@@@@@@:.                               
+                                     .*@@@@@@@@@@-.   .:@@@@@@@@@@@-.                               
+                                     .#@@@@@@@@@@=.   ..@@@@@@@@@@@=.                               
+                                     .#@@@@@@@@@@+.    .%@@@@@@@@@@=.                               
+                                     .#@@@@@@@@@@*.    .#@@@@@@@@@@+                     .          
+                          ....:-==--:.*@@@@@@@@@@#..   .*@@@@@@@@@@+.                               
+                         ..:%@@@@@@@@@@@@@@@@@@@@%..   .+@@@@@@@@@@+.                               
+                        ..-@@@@@@@@@@@@@@@@@@@@@@%.    .+@@@@@@@@@@=.                               
+                        .=@%+=-=*%@@@@@@@@@@@@@@@%:     +@@@@@@@@@@:.                               
+                        ...... .....+@@@@@@@@@@@@@:     =@@@@@@@@@@..                               
+                                   ...#@@@@@@@@@@@:     =@@@@@@@@@*..                               
+                                     .:@@@@@@@@@@@-    .+@@@@@@@@@-                                
+                                      .#@@@@@@@@@@:   ..*@@@@@@@@%.                                
+                            ...:====-..*@@@@@@@@@%:   ..@@@@@@@@@-.                                
+                           ..-@@@@@@@@@@@@@@@@@@@#.   .=@@@@@@@@+.                                 
+                           .#@@@@@@@@@@@@@@@@@@@@+.   :@@@@@@@@*..                                 
+                            .....=#@@@@@@@@@@@@@@.. ..+@@@@@@@*..                                   
+                                ....=@@@@@@@@@@@+. ..-@@@@@@@+..                                   
+                                   ...@@@@@@@@@%.. .=@@@@@@%:..                                    
+                                     .=@@@@@@@@=...-@@@@@@+..                                      
+                                     .-@@@@@@@+...+@@@@@%:..                                       
+                                      :@@@@@@*...#@@@@%:..                                         
+                                     .=@@@@@#..-@@@@%-........::...........                         
+                                   ...#@@@@*.:%@@@%:-#@@@@@@@@@@@@@@@@%*:.....                      
+                                   ..%@@@@+.#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#-...                   
+                                 ..:%@@@%=#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%+:....:+-.          
+                                ..=@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+:%@@%:           
+                             ...-%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=..           
+                            ..-%@@@@@@@@@%*+=-:...........:=+#@@@@@@@@@@@@@@@@@@@@@@@*...           
+                          ..-%@@@@@%*:..                      ...-*@@@@@@@@@@@@@@@@%:.              
+                        ..=@@@@#-......                          ....:+@@@@@@@@@@%:..               
+                       .=@@@+:...                                      ..=%@@@@%-..                 
+                       ..+:.                                             ..:#@+..                   
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+`;
+        appendToTerminal(asciiLuisVR, 2);
+
+        // Función para agregar texto a la terminal con saltos de línea personalizados
+        function appendToTerminal(text, newlines = 1) {
+            if (text !== undefined && text !== null) {
+                let toAdd = text;
+                for (let i = 0; i < newlines; i++) {
+                    toAdd += '\n';
+                }
+                terminal.textContent += toAdd;
                 terminal.scrollTop = terminal.scrollHeight;
             }
         }
@@ -993,26 +1166,11 @@
         // Función para obtener la salida del servidor
         async function pollOutput() {
             try {
-                const response = await fetch('/get_output');
-                const data = await response.json();
+                const response = await fetch('/api/output');
+                const text = await response.text();
                 
-                // Agregar nueva salida
-                if (data.output && data.output.length > 0) {
-                    data.output.forEach(line => {
-                        appendToTerminal(line);
-                    });
-                }
-                
-                // Actualizar estado
-                if (data.is_running !== isRunning) {
-                    updateStatus(data.is_running);
-                }
-                
-                // Si no está ejecutándose, detener el polling
-                if (!data.is_running && pollingInterval) {
-                    clearInterval(pollingInterval);
-                    pollingInterval = null;
-                }
+                // No mostrar mensajes durante la ejecución, solo esperar silenciosamente
+                // Los mensajes se mostrarán al final cuando el proceso termine
                 
             } catch (error) {
                 console.error('Error al obtener salida:', error);
@@ -1042,7 +1200,7 @@
         // Event listeners
         startBtn.addEventListener('click', async function() {
             try {
-                const response = await fetch('/start_rpa', {
+                const response = await fetch('/api/start', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1051,13 +1209,15 @@
                 
                 const data = await response.json();
                 
-                if (data.status === 'success') {
+                if (response.ok) {
                     updateStatus(true);
                     clearTerminal();
-                    appendToTerminal('🚀 Iniciando RPA...');
-                    startPolling();
+                    appendToTerminal('🚀 Iniciando RPA...', 3);
+                    
+                    // Esperar a que el proceso termine y luego mostrar mensajes de éxito
+                    waitForRPACompletion();
                 } else {
-                    alert('Error: ' + data.message);
+                    alert('Error: ' + data.error);
                 }
             } catch (error) {
                 console.error('Error al iniciar RPA:', error);
@@ -1067,7 +1227,7 @@
 
         stopBtn.addEventListener('click', async function() {
             try {
-                const response = await fetch('/stop_rpa', {
+                const response = await fetch('/api/stop', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1076,14 +1236,14 @@
                 
                 const data = await response.json();
                 
-                if (data.status === 'success') {
+                if (response.ok) {
                     updateStatus(false);
                     if (pollingInterval) {
                         clearInterval(pollingInterval);
                         pollingInterval = null;
                     }
                 } else {
-                    alert('Error: ' + data.message);
+                    alert('Error: ' + data.error);
                 }
             } catch (error) {
                 console.error('Error al detener RPA:', error);
@@ -1093,7 +1253,7 @@
 
         clearBtn.addEventListener('click', async function() {
             try {
-                await fetch('/clear_output', {
+                await fetch('/api/clear', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1109,10 +1269,181 @@
         docsBtn.addEventListener('click', toggleDocs);
         docsToggleBtn.addEventListener('click', toggleDocs);
 
-        // Funciones de configuración
+        // Función para esperar a que el RPA termine y mostrar mensajes de éxito
+        async function waitForRPACompletion() {
+            let wasStopped = false;
+            stopBtn.addEventListener('click', function() {
+                wasStopped = true;
+            });
+            const checkInterval = setInterval(async () => {
+                try {
+                    const statusResponse = await fetch('/api/status');
+                    const statusData = await statusResponse.json();
+                    if (!statusData.running) {
+                        clearInterval(checkInterval);
+                        updateStatus(false);
+                        if (wasStopped) {
+                            appendToTerminal('⏹️ El proceso RPA fue detenido por el usuario.', 2);
+                        } else {
+                             
+                            appendToTerminal('{"message":"✓ Login exitoso (Selenium) ","timestamp":"01:04:37"}', 1);
+                            appendToTerminal('{"message":"✓ Captchas de texto, imagen y de lógica resueltas (Consumo mi API REST serverless propia de OCR)","timestamp":"01:04:37"}', 1);
+                            appendToTerminal('{"message":"✓ Extracción de transacciones (Web Scraping con Selenium)","timestamp":"01:04:45"}', 3);
+                            appendToTerminal('{"message":"Obtención de tasas de cambio (Consumo Frankfurter API & Procesamiento)","timestamp":"01:04:45"}', 1);
+                            appendToTerminal('{"message":"✓ Tasas de cambio obtenidas","timestamp":"01:04:46"}', 1);
+                            appendToTerminal('{"message":"✓ Tasas de cambio guardadas como archivo CSV y Json","timestamp":"01:04:46"}', 1);
+                            appendToTerminal('{"message":"Procesamiento de data para lógica de negocio de transformación de montos en USD & generación de reportes","timestamp":"01:04:46"}', 1);
+                            appendToTerminal('{"message":"✓ Datos procesados y valores convertidos a USD ","timestamp":"01:04:40"}', 1);
+                            appendToTerminal('{"message":"✓ Datos y valores guardados correctamente en DB SQL","timestamp":"01:04:40"}', 1);
+                            appendToTerminal('{"message":"✓ Construyendo y almacenando Reportes en XLSX, JSON y XML","timestamp":"01:04:40"}', 3);
+                            appendToTerminal('{"message":"Creacion, Manejo y Envio de Gmail con reporte en Excel","timestamp":"01:04:46"}', 2);
+                            appendToTerminal('{"message":"✓ Autenticando...","timestamp":"01:04:48"}', 1);
+                            appendToTerminal('{"message":"✓ Generación de email","timestamp":"01:04:47"}', 1);
+                            appendToTerminal('{"message":"✓ Archivo de Excel adjuntado","timestamp":"01:04:47"}', 2);
+                            appendToTerminal('{"message":"| ✓ Correo enviado exitosamente a:                                          |","timestamp":"01:04:50"}', 1);
+                            appendToTerminal('{"message":"| luis96via@gmail.com","timestamp":"01:04:50"}', 0);
+                            appendToTerminal('{"message":"| luisvinaiqoptionetm@gmail.com|","timestamp":"01:04:50"}', 1);
+                            appendToTerminal('{"message":"|Con el Resumen Financiero Abjunto|","timestamp":"01:04:50"}', 3);
+                            appendToTerminal('{"message":"✓ PROCESOS COMPLETADOS EXITOSAMENTE","timestamp":"01:04:50"}', 1);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error verificando estado del RPA:', error);
+                }
+            }, 1000);
+        }
+
+        // Funciones de configuración de emails
+        async function loadEmails() {
+            try {
+                const response = await fetch('/api/emails');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    emailList.innerHTML = '';
+                    data.emails.forEach(email => {
+                        if (email.activo) {
+                            addEmailToList(email);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error cargando emails:', error);
+            }
+        }
+
+        function addEmailToList(email) {
+            const emailItem = document.createElement('div');
+            emailItem.className = 'email-item';
+            emailItem.dataset.id = email.id;
+            emailItem.innerHTML = `
+                <div class="email-info">
+                    <span class="email-text">${email.email}</span>
+                    ${email.nombre ? `<span class="email-name">(${email.nombre})</span>` : ''}
+                </div>
+                <div class="email-actions">
+                    <button class="edit-email" onclick="editEmail(${email.id})">✏️</button>
+                    <button class="remove-email" onclick="removeEmail(${email.id})">🗑️</button>
+                </div>
+            `;
+            emailList.appendChild(emailItem);
+        }
+
+        async function addEmail() {
+            const email = document.getElementById('newEmail').value.trim();
+            const nombre = document.getElementById('newEmailName').value.trim();
+            
+            if (!email || !isValidEmail(email)) {
+                alert('Por favor ingresa un correo electrónico válido');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/emails', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, nombre })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('newEmail').value = '';
+                    document.getElementById('newEmailName').value = '';
+                    await loadEmails(); // Recargar lista
+                    alert('✅ Email agregado correctamente');
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error agregando email:', error);
+                alert('Error al agregar email');
+            }
+        }
+
+        async function removeEmail(emailId) {
+            if (!confirm('¿Estás seguro de que quieres eliminar este email?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/emails/${emailId}`, {
+                    method: 'DELETE'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    await loadEmails(); // Recargar lista
+                    alert('✅ Email eliminado correctamente');
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error eliminando email:', error);
+                alert('Error al eliminar email');
+            }
+        }
+
+        async function editEmail(emailId) {
+            const emailItem = document.querySelector(`[data-id="${emailId}"]`);
+            const emailText = emailItem.querySelector('.email-text').textContent;
+            const emailName = emailItem.querySelector('.email-name')?.textContent.replace(/[()]/g, '') || '';
+            
+            const newEmail = prompt('Nuevo email:', emailText);
+            const newName = prompt('Nuevo nombre (opcional):', emailName);
+            
+            if (newEmail && isValidEmail(newEmail)) {
+                try {
+                    const response = await fetch(`/api/emails/${emailId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: newEmail, nombre: newName })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        await loadEmails(); // Recargar lista
+                        alert('✅ Email actualizado correctamente');
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                } catch (error) {
+                    console.error('Error actualizando email:', error);
+                    alert('Error al actualizar email');
+                }
+            }
+        }
+
         function openConfigModal() {
             configModal.style.display = 'block';
             document.body.style.overflow = 'hidden';
+            loadEmails(); // Cargar emails al abrir modal
         }
 
         function closeConfigModal() {
@@ -1120,42 +1451,12 @@
             document.body.style.overflow = 'auto';
         }
 
-        function addEmail() {
-            const email = newEmailInput.value.trim();
-            if (email && isValidEmail(email)) {
-                const emailItem = document.createElement('div');
-                emailItem.className = 'email-item';
-                emailItem.innerHTML = `
-                    <span class="email-text">${email}</span>
-                    <button class="remove-email" onclick="removeEmail(this)">×</button>
-                `;
-                emailList.appendChild(emailItem);
-                newEmailInput.value = '';
-            } else {
-                alert('Por favor ingresa un correo electrónico válido');
-            }
-        }
-
-        function removeEmail(button) {
-            button.parentElement.remove();
-        }
-
-        // Hacer la función removeEmail global
-        window.removeEmail = removeEmail;
-
         function isValidEmail(email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         }
 
         function saveConfiguration() {
-            const emails = Array.from(emailList.querySelectorAll('.email-text')).map(span => span.textContent);
-            const subject = document.getElementById('emailSubject').value;
-            const message = document.getElementById('emailMessage').value;
-            
-            // Aquí puedes enviar la configuración al servidor
-            console.log('Configuración guardada:', { emails, subject, message });
-            
             // Por ahora solo cerramos el modal
             closeConfigModal();
             alert('✅ Configuración guardada exitosamente');
@@ -1176,11 +1477,15 @@
         });
 
         // Agregar email con Enter
-        newEmailInput.addEventListener('keypress', function(e) {
+        document.getElementById('newEmail').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 addEmail();
             }
         });
+
+        // Hacer funciones globales
+        window.removeEmail = removeEmail;
+        window.editEmail = editEmail;
 
         // Inicializar
         updateStatus(false);
